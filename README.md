@@ -1,12 +1,6 @@
-
-[![Travis CI status](https://travis-ci.org/davidread/ckanext-hierarchy.svg?branch=master)](https://travis-ci.org/davidread/ckanext-hierarchy)
-
-[![Latest version on pypi](https://img.shields.io/pypi/v/ckanext-hierarchy.svg)](https://pypi.org/project/ckanext-hierarchy/)
-
-[![License](https://img.shields.io/pypi/l/ckanext-hierarchy.svg)](https://pypi.org/project/ckanext-hierarchy/)
-
-
 # ckanext-hierarchy - Organization and group hierarchy for CKAN
+
+This repo is a fork. Original repo is [ckanext-hierarchy](https://github.com/ckan/ckanext-hierarchy). This repository contains modifications that the [Indexa Geodata's Catalogue](http://catalogo.indexageodata.com) needed.
 
 Organizations and groups can be arranged into a tree hierarchy.
 
