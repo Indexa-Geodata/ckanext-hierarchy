@@ -1,0 +1,16 @@
+{% ckan_extends %}
+
+{% if group_dict is not defined %}{% set group_dict = c.group_dict %}{% endif %}
+
+{% block heading %}
+    <h1 class="heading">
+        {% if organization.longname %}
+           {{ organization.longname }} ({{ organization.title or organization.name }})
+        {% else %}
+            {{ organization.title or organization.name }}
+        {% endif %}
+        {% if organization.state == 'deleted' %}
+          [{{ _('Deleted') }}]
+        {% endif %}
+    </h1>
+{% endblock %}
