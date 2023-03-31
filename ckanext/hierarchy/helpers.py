@@ -1,6 +1,46 @@
 import ckan.plugins as p
 import ckan.model as model
 from ckan.common import request, is_flask_request
+from ckan.lib.helpers import literal
+
+
+def render_tree():
+    '''Returns HTML for a hierarchy of all publishers'''
+    from ckan.logic import get_action
+    from ckan import model
+    context = {'model': model, 'session': model.Session}
+    top_nodes = get_action('group_tree')(context=context,
+                                         data_dict={'type': 'group'})
+    return _render_tree(top_nodes)
+
+
+def _render_tree(top_nodes):
+    '''Renders a tree of nodes. 10x faster than Jinja/organization_tree.html
+    Note: avoids the slow url_for routine.
+    '''
+    html = '<ul class="hierarchy-tree-top">'
+    for node in top_nodes:
+        html += _render_tree_node(node)
+    return literal(html + '</ul>')
+
+
+def _render_tree_node(node):
+    if node['children']:
+        html = '<div class="div-tree"><span class="span-tree glyphicon glyphicon-menu-right"></span><button type="button" class="btn btn-tree"onclick="window.location.href=\'/group/%s\'">%s</button></div>' % (
+            node['name'], node['title'])
+    else:
+        html = '<div class="div-tree"><span class="span-tree span-hidden"></span><button type="button" class="btn btn-tree"onclick="window.location.href=\'/group/%s\'">%s</button></div>' % (
+            node['name'], node['title'])
+
+    if node['highlighted']:
+        html = '<strong>%s</strong>' % html
+    if node['children']:
+        html += '<ul class="hierarchy-tree ul-nested">'
+        for child in node['children']:
+            html += _render_tree_node(child)
+        html += '</ul>'
+    html = '<li class="li-group-member" id="node_%s">%s</li>' % (node['name'], html)
+    return html
 
 
 def group_tree(organizations=[], type_='organization'):
@@ -47,26 +87,26 @@ def group_tree_section(id_, type_='organization', include_parents=True,
 
 
 def group_tree_parents(id_, type_='organization'):
-    tree_node = p.toolkit.get_action(type_+'_show')({}, {'id': id_,
-                                                         'include_dataset_count': False,
-                                                         'include_users': False,
-                                                         'include_followers': False,
-                                                         'include_tags': False})
+    tree_node = p.toolkit.get_action(type_ + '_show')({}, {'id': id_,
+                                                           'include_dataset_count': False,
+                                                           'include_users': False,
+                                                           'include_followers': False,
+                                                           'include_tags': False})
     if (tree_node['groups']):
         parent_id = tree_node['groups'][0]['name']
         parent_node = \
-            p.toolkit.get_action(type_+'_show')({}, {'id': parent_id})
+            p.toolkit.get_action(type_ + '_show')({}, {'id': parent_id})
         return group_tree_parents(parent_id) + [parent_node]
     else:
         return []
 
 
 def group_tree_get_longname(id_, default="", type_='organization'):
-    tree_node = p.toolkit.get_action(type_+'_show')({}, {'id': id_,
-                                                         'include_dataset_count': False,
-                                                         'include_users': False,
-                                                         'include_followers': False,
-                                                         'include_tags': False})
+    tree_node = p.toolkit.get_action(type_ + '_show')({}, {'id': id_,
+                                                           'include_dataset_count': False,
+                                                           'include_users': False,
+                                                           'include_followers': False,
+                                                           'include_tags': False})
     longname = tree_node.get("longname", default)
     if not longname:
         return default

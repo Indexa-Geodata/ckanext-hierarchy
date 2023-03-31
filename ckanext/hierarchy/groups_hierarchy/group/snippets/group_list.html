@@ -10,7 +10,7 @@ Example:
 
 {% if q is not defined %}{% set q = c.q %}{% endif %}
 
-<div id="publisher-tree">
+<div id="publisher-tree col-md-12">
      {% if q %}
      	{% set top_nodes = h.group_tree_highlight(groups, h.group_tree(type_='group')) %}
      {% else %}
