@@ -9,12 +9,26 @@ Example:
 #}
 
 {% if q is not defined %}{% set q = c.q %}{% endif %}
+<style>
+     .ul-nested {
+          display: none;
+     }
 
+     .ul-active {
+          display: block;
+     }
+
+     .hierarchy-tree,
+     .hierarchy-tree-top {
+          padding-left: 10px;
+          list-style-type: none;
+     }
+</style>
 <div id="publisher-tree col-md-12">
      {% if q %}
-     	{% set top_nodes = h.group_tree_highlight(groups, h.group_tree(type_='group')) %}
+     {% set top_nodes = h.group_tree_highlight(groups, h.group_tree(type_='group')) %}
      {% else %}
-     	{% set top_nodes = h.group_tree(organizations=groups, type_='group') %}
+     {% set top_nodes = h.group_tree(organizations=groups, type_='group') %}
      {% endif %}
      {% snippet 'group/snippets/group_tree.html', top_nodes=top_nodes, use_longnames=True %}
 </div>
