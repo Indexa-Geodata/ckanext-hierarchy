@@ -6,7 +6,7 @@ DGU we speeded up display of the tree 10 times (necessary as we have 1000
 groups) by replacing this template with a recursive code routine:
 https://github.com/datagovuk/ckanext-dgu/blob/5fb78b354517c2198245bdc9c98fb5d6c82c6bcc/ckanext/dgu/lib/helpers.py#L140
 
-orgs    - List of groups
+orgs - List of groups
 
 Example:
 
@@ -15,13 +15,16 @@ Example:
 #}
 {{ h.render_tree() }}
 <script>
-var toggler = document.getElementsByClassName("span-tree");
-var i;
-
-for (i = 0; i < toggler.length; i++) {
-  toggler[i].addEventListener("click", function() {
-    this.parentElement.parentElement.querySelector(".ul-nested").classList.toggle("ul-active");
-    this.classList.toggle("glyphicon-menu-down");
+  jQuery.noConflict();
+  const jstree = jQuery('#jstree');
+  jstree.jstree({
+    "plugins":['search']
   });
-}
+  jQuery('#hierarchy-form').submit(function(e){
+    e.preventDefault();
+    jstree.jstree(true).search(jQuery('#group-search').val());
+  });
+  jQuery('#jstree').on("changed.jstree", function (e, data) {
+    window.location.href = data.instance.get_node(data.selected[0]).href;
+  });
 </script>

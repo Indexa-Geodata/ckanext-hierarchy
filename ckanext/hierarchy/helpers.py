@@ -18,19 +18,15 @@ def _render_tree(top_nodes):
     '''Renders a tree of nodes. 10x faster than Jinja/organization_tree.html
     Note: avoids the slow url_for routine.
     '''
-    html = '<ul class="hierarchy-tree-top">'
+    html = '<div id="jstree"><ul class="hierarchy-tree-top">'
     for node in top_nodes:
         html += _render_tree_node(node)
-    return literal(html + '</ul>')
+    return literal(html + '</ul></div>')
 
 
 def _render_tree_node(node):
-    if node['children']:
-        html = '<div class="div-tree"><span class="span-tree glyphicon glyphicon-menu-right"></span><button type="button" class="btn btn-tree"onclick="window.location.href=\'/group/%s\'">%s</button></div>' % (
-            node['name'], node['title'])
-    else:
-        html = '<div class="div-tree"><span class="span-tree span-hidden"></span><button type="button" class="btn btn-tree"onclick="window.location.href=\'/group/%s\'">%s</button></div>' % (
-            node['name'], node['title'])
+    html = '<a href=\'/group/%s\'">%s</a>' % (
+        node['name'], node['title'])
 
     if node['highlighted']:
         html = '<strong>%s</strong>' % html
