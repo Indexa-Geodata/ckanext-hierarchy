@@ -25,6 +25,6 @@ Example:
     jstree.jstree(true).search(jQuery('#group-search').val());
   });
   jQuery('#jstree').on("changed.jstree", function (e, data) {
-    window.location.href = data.instance.get_node(data.selected[0]).href;
+    window.location.href = data.instance.get_node(data.selected[0]).a_attr.href;
   });
 </script>
